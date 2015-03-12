@@ -10,13 +10,26 @@ namespace GameOfLife
     {
         int rows;
         int columns;
-        public int[,] grid;
+        int[,] grid;
 
         public World(int rows, int columns)
         {
             this.rows = rows;
             this.columns = columns;
             grid = new int[rows, columns];
+        }
+
+        public int[,] Grid
+        {
+            get { return grid; }
+        }
+
+        public void Initialise(int[][] live)
+        {
+            for (int i = 0; i < live.GetLength(0); i++)
+            {
+                SetCellLive(live[i]);
+            }
         }
 
         void SetCellLive(int[] indices)
@@ -29,17 +42,24 @@ namespace GameOfLife
             grid[indices[0], indices[1]] = 0;
         }
 
-        public void Initialise(int[][] live)
+        public void Evolve()
         {
-            for (int i = 0; i < live.GetLength(0); i++)
+            for (int i = 0; i < rows; i++)
             {
-                SetCellLive(live[i]);
+                for (int j = 0; j < columns; j++)
+                {
+                    int currentCell = grid[i, j];
+                    // Count live neighbours of the current cell
+                    int liveNeighbours = CountLiveNeighbours(i, j);
+                    // Apply rules
+                    int result = ApplyRules(i, j, currentCell, liveNeighbours);
+                    // Save result
+                }
             }
         }
 
         public int CountLiveNeighbours(int x, int y)
         {
-            // Get all neighbours
             List<int> neighbours = new List<int>();
             for (int i = -1; i < 2; i++)
             {
@@ -61,39 +81,11 @@ namespace GameOfLife
         public int ApplyRules(int x, int y, int currentCell, int liveNeighbours)
         {
             int result = 0;
-            if (currentCell > 0)
+            if ((currentCell > 0 && liveNeighbours == 2) || liveNeighbours == 3)
             {
-                if (liveNeighbours < 2)
-                    result = 0;
-                else if (liveNeighbours == 2 || liveNeighbours == 3)
-                    result = 1;
-                else
-                    result = 0;
-            }
-            else
-            {
-                if (liveNeighbours == 3)
-                    result = 1;
-                else
-                    result = 0;
+                result = 1;
             }
             return result;
-        }
-
-        public void Evolve()
-        {
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    int currentCell = grid[i, j];
-                    // Count live neighbours of the current cell
-                    int liveNeighbours = CountLiveNeighbours(i, j);
-                    // Apply rules
-                    int result = ApplyRules(i, j, currentCell, liveNeighbours);
-                    // Save result
-                }
-            }
         }
 
         public override string ToString()

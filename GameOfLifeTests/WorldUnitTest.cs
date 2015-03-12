@@ -38,7 +38,12 @@ namespace GameOfLifeTests
         {
             int x = 0, y = 0;
             int live = world.CountLiveNeighbours(x, y);
-            int future = world.ApplyRules(x, y, world.grid[x, y], live);
+            int future = world.ApplyRules(x, y, world.Grid[x, y], live);
+            Assert.AreEqual(0, future);
+            x = 0;
+            y = 1;
+            live = world.CountLiveNeighbours(x, y);
+            future = world.ApplyRules(x, y, world.Grid[x, y], live);
             Assert.AreEqual(0, future);
         }
     }
