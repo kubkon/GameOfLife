@@ -12,6 +12,7 @@ namespace GameOfLife
         public readonly int rows;
         public readonly int columns;
         public readonly int[,] grid;
+        List<int[]> survived;
 
         public World(int rows, int columns)
         {
@@ -35,7 +36,12 @@ namespace GameOfLife
             }
         }
 
-        public void Evolve()
+        bool CompareArrays(int[] a1, int[] a2)
+        {
+            return a1.Zip(a2, (x, y) => x == y).All(x => x);
+        }
+
+        public bool Evolve()
         {
             List<int[]> survived = new List<int[]>();
             for (int i = 0; i < rows; i++)
@@ -54,6 +60,15 @@ namespace GameOfLife
             }
             // Update the grid
             UpdateGrid(survived);
+            // Check if evolution is finished
+            var finished = false;
+            if (this.survived != null)
+            {
+                finished = this.survived.Zip(survived, CompareArrays)
+                                        .All(x => x);
+            }
+            this.survived = survived;
+            return finished;
         }
 
         public int CountLiveNeighbours(int x, int y)
@@ -78,7 +93,7 @@ namespace GameOfLife
 
         public int ApplyRules(int x, int y, int currentCell, int liveNeighbours)
         {
-            int result = 0;
+            var result = 0;
             if ((currentCell > 0 && liveNeighbours == 2) || liveNeighbours == 3)
             {
                 result = 1;
@@ -106,7 +121,7 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            World world = new World(10, 12);
+            World world = new World(6, 6);
             List<int[]> liveCells = new List<int[]> () {
                 new int[] {0, 1},
                 new int[] {1, 2},
@@ -115,13 +130,15 @@ namespace GameOfLife
                 new int[] {2, 2}
             };
             world.Initialise(liveCells);
-            for (int i = 0; i < 5; i++)
+            while (true)
             {
                 Console.Clear();
                 Console.Write(world);
-                world.Evolve();
+                if (world.Evolve())
+                    break;
                 Thread.Sleep(1000);
             }
+            Console.WriteLine("Simulation finished.");
             Console.ReadKey();
         }
     }
