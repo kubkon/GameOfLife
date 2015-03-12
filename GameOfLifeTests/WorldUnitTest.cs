@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameOfLife;
 
@@ -13,7 +14,7 @@ namespace GameOfLifeTests
         public static void ClassInit(TestContext context)
         {
             world = new World(2, 2);
-            world.Initialise(new int[][] {
+            world.Initialise(new List<int[]>() {
                 new int[] {0, 0},
                 new int[] {1, 1}
             });
@@ -38,12 +39,12 @@ namespace GameOfLifeTests
         {
             int x = 0, y = 0;
             int live = world.CountLiveNeighbours(x, y);
-            int future = world.ApplyRules(x, y, world.Grid[x, y], live);
+            int future = world.ApplyRules(x, y, world.grid[x, y], live);
             Assert.AreEqual(0, future);
             x = 0;
             y = 1;
             live = world.CountLiveNeighbours(x, y);
-            future = world.ApplyRules(x, y, world.Grid[x, y], live);
+            future = world.ApplyRules(x, y, world.grid[x, y], live);
             Assert.AreEqual(0, future);
         }
     }

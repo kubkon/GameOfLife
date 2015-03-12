@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GameOfLife
 {
     public class World
     {
-        int rows;
-        int columns;
-        int[,] grid;
+        public readonly int rows;
+        public readonly int columns;
+        public readonly int[,] grid;
 
         public World(int rows, int columns)
         {
@@ -19,43 +20,40 @@ namespace GameOfLife
             grid = new int[rows, columns];
         }
 
-        public int[,] Grid
+        public void Initialise(List<int[]> liveCells)
         {
-            get { return grid; }
+            UpdateGrid(liveCells);
         }
 
-        public void Initialise(int[][] live)
+        void UpdateGrid(List<int[]> liveCells)
         {
-            for (int i = 0; i < live.GetLength(0); i++)
+            Array.Clear(grid, 0, rows * columns);
+            // FIX:ME check if indices do not exceed the grid dimensions
+            foreach (int[] indices in liveCells)
             {
-                SetCellLive(live[i]);
+                grid[indices[0], indices[1]] = 1;
             }
-        }
-
-        void SetCellLive(int[] indices)
-        {
-            grid[indices[0], indices[1]] = 1;
-        }
-
-        void SetCellDead(int[] indices)
-        {
-            grid[indices[0], indices[1]] = 0;
         }
 
         public void Evolve()
         {
+            List<int[]> survived = new List<int[]>();
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    int currentCell = grid[i, j];
+                    var currentCell = grid[i, j];
                     // Count live neighbours of the current cell
-                    int liveNeighbours = CountLiveNeighbours(i, j);
+                    var liveNeighbours = CountLiveNeighbours(i, j);
                     // Apply rules
-                    int result = ApplyRules(i, j, currentCell, liveNeighbours);
+                    var result = ApplyRules(i, j, currentCell, liveNeighbours);
                     // Save result
+                    if (result == 1)
+                        survived.Add(new int[] { i, j });
                 }
             }
+            // Update the grid
+            UpdateGrid(survived);
         }
 
         public int CountLiveNeighbours(int x, int y)
@@ -63,11 +61,11 @@ namespace GameOfLife
             List<int> neighbours = new List<int>();
             for (int i = -1; i < 2; i++)
             {
-                int k = x + i;
+                var k = x + i;
 
                 for (int j = -1; j < 2; j++)
                 {
-                    int l = y + j;
+                    var l = y + j;
 
                     if (k >= 0 && k < rows && l >= 0 && l < columns && (k != x || l != y))
                     {
@@ -95,7 +93,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    string el = grid[i, j] == 1 ? "x" : ".";
+                    var el = grid[i, j] == 1 ? "x" : ".";
                     sb.Append(el);
                 }
                 sb.Append("\n");
@@ -109,7 +107,7 @@ namespace GameOfLife
         static void Main(string[] args)
         {
             World world = new World(10, 12);
-            int[][] liveCells = new int[][] {
+            List<int[]> liveCells = new List<int[]> () {
                 new int[] {0, 1},
                 new int[] {1, 2},
                 new int[] {2, 0},
@@ -117,8 +115,13 @@ namespace GameOfLife
                 new int[] {2, 2}
             };
             world.Initialise(liveCells);
-            world.Evolve();
-            Console.Write(world);
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Clear();
+                Console.Write(world);
+                world.Evolve();
+                Thread.Sleep(1000);
+            }
             Console.ReadKey();
         }
     }
