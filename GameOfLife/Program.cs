@@ -12,6 +12,7 @@ namespace GameOfLife
         public readonly int rows;
         public readonly int columns;
         public readonly int[,] grid;
+
         List<int[]> survived;
 
         public World(int rows, int columns)
@@ -24,21 +25,6 @@ namespace GameOfLife
         public void Initialise(List<int[]> liveCells)
         {
             UpdateGrid(liveCells);
-        }
-
-        void UpdateGrid(List<int[]> liveCells)
-        {
-            Array.Clear(grid, 0, rows * columns);
-            // FIX:ME check if indices do not exceed the grid dimensions
-            foreach (int[] indices in liveCells)
-            {
-                grid[indices[0], indices[1]] = 1;
-            }
-        }
-
-        bool CompareArrays(int[] a1, int[] a2)
-        {
-            return a1.Zip(a2, (x, y) => x == y).All(x => x);
         }
 
         public bool Evolve()
@@ -114,6 +100,21 @@ namespace GameOfLife
                 sb.Append("\n");
             }
             return sb.ToString();
+        }
+
+        void UpdateGrid(List<int[]> liveCells)
+        {
+            Array.Clear(grid, 0, rows * columns);
+            // FIX:ME check if indices do not exceed the grid dimensions
+            foreach (int[] indices in liveCells)
+            {
+                grid[indices[0], indices[1]] = 1;
+            }
+        }
+
+        bool CompareArrays(int[] a1, int[] a2)
+        {
+            return a1.Zip(a2, (x, y) => x == y).All(x => x);
         }
     }
 
