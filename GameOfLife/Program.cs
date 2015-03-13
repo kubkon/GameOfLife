@@ -45,6 +45,7 @@ namespace GameOfLife
                 }
             }
             // Update the grid
+            ClearGrid();
             UpdateGrid(survived);
             // Check if evolution is finished
             var finished = false;
@@ -102,9 +103,13 @@ namespace GameOfLife
             return sb.ToString();
         }
 
-        void UpdateGrid(List<int[]> liveCells)
+        void ClearGrid()
         {
             Array.Clear(grid, 0, rows * columns);
+        }
+
+        void UpdateGrid(List<int[]> liveCells)
+        {
             // FIX:ME check if indices do not exceed the grid dimensions
             foreach (int[] indices in liveCells)
             {
