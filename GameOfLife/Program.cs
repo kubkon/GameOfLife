@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,25 @@ namespace GameOfLife
         public void Initialise(List<int[]> liveCells)
         {
             UpdateGrid(liveCells);
+        }
+
+        public void Randomise()
+        {
+            var rnd = new Random();
+            var seeded = new List<int[]> ();
+            for (int i = 0; i < rnd.Next(rows * columns); i++)
+            {
+                var m = rnd.Next(rows);
+                var n = rnd.Next(columns);
+                var tuple = new int[] { m, n };
+                if (seeded.Any(x => CompareArrays(tuple, x)))
+                {
+                    i--;
+                    continue;
+                }
+                seeded.Add(tuple);
+            }
+            UpdateGrid(seeded);
         }
 
         public bool Evolve()
@@ -127,15 +147,14 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            var world = new World(4, 4);
-            var liveCells = new List<int[]> () {
-                new int[] {0, 1},
-                new int[] {1, 2},
-                new int[] {2, 0},
-                new int[] {2, 1},
-                new int[] {2, 2}
-            };
-            world.Initialise(liveCells);
+            var culture = new CultureInfo("en-GB");
+            Console.Write("Number of rows: ");
+            var rows = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+            Console.Write("Number of columns: ");
+            var columns = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+
+            var world = new World(rows, columns);
+            world.Randomise();
             while (true)
             {
                 Console.Clear();
