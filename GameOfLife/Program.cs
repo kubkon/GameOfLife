@@ -158,28 +158,21 @@ namespace GameOfLife
 
             if (!parseRows)
             {
-                Console.Write("ERROR! Number of rows needs to be an integer.");
-                Console.ReadKey();
-                return;
+                Console.Write("\nERROR! Number of rows needs to be an integer.");
             }
             else if (!parseColumns)
             {
-                Console.Write("ERROR! Number of columns needs to be an integer.");
-                Console.ReadKey();
-                return;
+                Console.Write("\nERROR! Number of columns needs to be an integer.");
             }
             else if (!parseLiveCells)
             {
-                Console.Write("ERROR! Initial number of live cells needs to be an integer.");
-                Console.ReadKey();
-                return;
+                Console.Write("\nERROR! Initial number of live cells needs to be an integer.");
             }
             else
             {
                 var world = new World(rows, columns);
                 world.Randomise(liveCells: liveCells);
                 var maxIterations = 100;
-
                 for (int i = 0; i < maxIterations; i++)
                 {
                     Console.Clear();
@@ -189,8 +182,8 @@ namespace GameOfLife
                     Thread.Sleep(1000);
                 }
                 Console.WriteLine("\nSimulation finished.");
-                Console.ReadKey();
             }
+            Console.ReadKey();
         }
     }
 }
