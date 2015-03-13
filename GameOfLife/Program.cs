@@ -13,6 +13,7 @@ namespace GameOfLife
         public readonly int rows;
         public readonly int columns;
         public readonly int[,] grid;
+        public int maxIterations = 100;
 
         List<int[]> survived;
 
@@ -156,24 +157,23 @@ namespace GameOfLife
             Console.Write("Initial number of live cells: ");
             var parseLiveCells = Int32.TryParse(Console.ReadLine(), out liveCells);
 
-            if (!parseRows)
+            if (!parseRows || rows <= 0)
             {
-                Console.Write("\nERROR! Number of rows needs to be an integer.");
+                Console.Write("\nERROR! Number of rows needs to be a positive integer.");
             }
-            else if (!parseColumns)
+            else if (!parseColumns || columns <= 0)
             {
-                Console.Write("\nERROR! Number of columns needs to be an integer.");
+                Console.Write("\nERROR! Number of columns needs to be a positive integer.");
             }
-            else if (!parseLiveCells)
+            else if (!parseLiveCells || liveCells <= 0 || liveCells > rows * columns)
             {
-                Console.Write("\nERROR! Initial number of live cells needs to be an integer.");
+                Console.Write("\nERROR! Initial number of live cells needs to be a positive integer not exceeding 'rows * columns'.");
             }
             else
             {
                 var world = new World(rows, columns);
                 world.Randomise(liveCells: liveCells);
-                var maxIterations = 100;
-                for (int i = 0; i < maxIterations; i++)
+                for (int i = 0; i < world.maxIterations; i++)
                 {
                     Console.Clear();
                     Console.Write(world);
