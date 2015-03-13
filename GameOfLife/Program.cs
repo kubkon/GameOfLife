@@ -12,15 +12,17 @@ namespace GameOfLife
     {
         public readonly int rows;
         public readonly int columns;
+        public readonly int initLiveCells;
         public readonly int[,] grid;
         public int maxIterations = 100;
 
         List<int[]> survived;
 
-        public World(int rows, int columns)
+        public World(int rows, int columns, int initLiveCells)
         {
             this.rows = rows;
             this.columns = columns;
+            this.initLiveCells = initLiveCells;
             grid = new int[rows, columns];
         }
 
@@ -29,12 +31,11 @@ namespace GameOfLife
             UpdateGrid(liveCells);
         }
 
-        public void Randomise(int liveCells=-1)
+        public void Randomise()
         {
             var rnd = new Random();
             var seeded = new List<int[]> ();
-            var initLiveCells = liveCells < 0 ? rnd.Next(rows * columns) : liveCells;
-            for (int i = 0; i < initLiveCells; i++)
+            for (int i = 0; i < this.initLiveCells; i++)
             {
                 var m = rnd.Next(rows);
                 var n = rnd.Next(columns);
@@ -149,13 +150,13 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            int rows, columns, liveCells;
+            int rows, columns, initLiveCells;
             Console.Write("Number of rows: ");
             var parseRows = Int32.TryParse(Console.ReadLine(), out rows);
             Console.Write("Number of columns: ");
             var parseColumns = Int32.TryParse(Console.ReadLine(), out columns);
             Console.Write("Initial number of live cells: ");
-            var parseLiveCells = Int32.TryParse(Console.ReadLine(), out liveCells);
+            var parseInitLiveCells = Int32.TryParse(Console.ReadLine(), out initLiveCells);
 
             if (!parseRows || rows <= 0)
             {
@@ -165,14 +166,14 @@ namespace GameOfLife
             {
                 Console.Write("\nERROR! Number of columns needs to be a positive integer.");
             }
-            else if (!parseLiveCells || liveCells <= 0 || liveCells > rows * columns)
+            else if (!parseInitLiveCells || initLiveCells <= 0 || initLiveCells > rows * columns)
             {
                 Console.Write("\nERROR! Initial number of live cells needs to be a positive integer not exceeding 'rows * columns'.");
             }
             else
             {
-                var world = new World(rows, columns);
-                world.Randomise(liveCells: liveCells);
+                var world = new World(rows, columns, initLiveCells);
+                world.Randomise();
                 for (int i = 0; i < world.maxIterations; i++)
                 {
                     Console.Clear();
