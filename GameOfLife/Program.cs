@@ -148,28 +148,49 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            var culture = new CultureInfo("");
+            int rows, columns, liveCells;
             Console.Write("Number of rows: ");
-            var rows = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+            var parseRows = Int32.TryParse(Console.ReadLine(), out rows);
             Console.Write("Number of columns: ");
-            var columns = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+            var parseColumns = Int32.TryParse(Console.ReadLine(), out columns);
             Console.Write("Initial number of live cells: ");
-            var liveCells = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+            var parseLiveCells = Int32.TryParse(Console.ReadLine(), out liveCells);
 
-            var world = new World(rows, columns);
-            world.Randomise(liveCells: liveCells);
-            var maxIterations = 100;
-
-            for (int i = 0; i < maxIterations; i++)
+            if (!parseRows)
             {
-                Console.Clear();
-                Console.Write(world);
-                if (world.Evolve())
-                    break;
-                Thread.Sleep(1000);
+                Console.Write("ERROR! Number of rows needs to be an integer.");
+                Console.ReadKey();
+                return;
             }
-            Console.WriteLine("\nSimulation finished.");
-            Console.ReadKey();
+            else if (!parseColumns)
+            {
+                Console.Write("ERROR! Number of columns needs to be an integer.");
+                Console.ReadKey();
+                return;
+            }
+            else if (!parseLiveCells)
+            {
+                Console.Write("ERROR! Initial number of live cells needs to be an integer.");
+                Console.ReadKey();
+                return;
+            }
+            else
+            {
+                var world = new World(rows, columns);
+                world.Randomise(liveCells: liveCells);
+                var maxIterations = 100;
+
+                for (int i = 0; i < maxIterations; i++)
+                {
+                    Console.Clear();
+                    Console.Write(world);
+                    if (world.Evolve())
+                        break;
+                    Thread.Sleep(1000);
+                }
+                Console.WriteLine("\nSimulation finished.");
+                Console.ReadKey();
+            }
         }
     }
 }
