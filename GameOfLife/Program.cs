@@ -122,8 +122,8 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            World world = new World(6, 6);
-            List<int[]> liveCells = new List<int[]> () {
+            var world = new World(4, 4);
+            var liveCells = new List<int[]> () {
                 new int[] {0, 1},
                 new int[] {1, 2},
                 new int[] {2, 0},

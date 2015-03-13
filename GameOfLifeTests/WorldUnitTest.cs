@@ -24,7 +24,7 @@ namespace GameOfLifeTests
         public void TestCountLiveNeighbours()
         {
 
-            int live = world.CountLiveNeighbours(0, 0);
+            var live = world.CountLiveNeighbours(0, 0);
             Assert.AreEqual(1, live);
             live = world.CountLiveNeighbours(0, 1);
             Assert.AreEqual(2, live);
@@ -38,14 +38,44 @@ namespace GameOfLifeTests
         public void TestApplyRules()
         {
             int x = 0, y = 0;
-            int live = world.CountLiveNeighbours(x, y);
-            int future = world.ApplyRules(x, y, world.grid[x, y], live);
+            var live = world.CountLiveNeighbours(x, y);
+            var future = world.ApplyRules(x, y, world.grid[x, y], live);
             Assert.AreEqual(0, future);
             x = 0;
             y = 1;
             live = world.CountLiveNeighbours(x, y);
             future = world.ApplyRules(x, y, world.grid[x, y], live);
             Assert.AreEqual(0, future);
+        }
+
+        [TestMethod]
+        public void TestEvolve()
+        {
+            var w = new World(4, 4);
+            var liveCells = new List<int[]> () {
+                new int[] {0, 1},
+                new int[] {1, 2},
+                new int[] {2, 0},
+                new int[] {2, 1},
+                new int[] {2, 2}
+            };
+            w.Initialise(liveCells);
+            for (int i = 0; i < 7; i++)
+            {
+                Assert.AreEqual(false, w.Evolve());
+            }
+            Assert.AreEqual(true, w.Evolve());
+            for (int i = 0; i < w.rows; i++)
+            {
+                for (int j = 0; j < w.columns; j++)
+                {
+                    var cell = w.grid[i, j];
+                    if ((i == 2 && (j == 2 || j == 3)) || (i == 3 && (j == 2 || j == 3)))
+                        Assert.AreEqual(1, cell);
+                    else
+                        Assert.AreEqual(0, cell);
+                }
+            }
         }
     }
 }
