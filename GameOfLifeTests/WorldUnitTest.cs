@@ -70,7 +70,7 @@ namespace GameOfLifeTests
                 for (int j = 0; j < w.columns; j++)
                 {
                     var cell = w.grid[i, j];
-                    if ((i == 2 && (j == 2 || j == 3)) || (i == 3 && (j == 2 || j == 3)))
+                    if ((i == 2 || i == 3) && (j == 2 || j == 3))
                         Assert.AreEqual(1, cell);
                     else
                         Assert.AreEqual(0, cell);
