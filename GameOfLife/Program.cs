@@ -28,11 +28,12 @@ namespace GameOfLife
             UpdateGrid(liveCells);
         }
 
-        public void Randomise()
+        public void Randomise(int liveCells=-1)
         {
             var rnd = new Random();
             var seeded = new List<int[]> ();
-            for (int i = 0; i < rnd.Next(rows * columns); i++)
+            var initLiveCells = liveCells < 0 ? rnd.Next(rows * columns) : liveCells;
+            for (int i = 0; i < initLiveCells; i++)
             {
                 var m = rnd.Next(rows);
                 var n = rnd.Next(columns);
@@ -147,14 +148,16 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            var culture = new CultureInfo("en-GB");
+            var culture = new CultureInfo("");
             Console.Write("Number of rows: ");
             var rows = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
             Console.Write("Number of columns: ");
             var columns = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
+            Console.Write("Initial number of live cells: ");
+            var liveCells = ((IConvertible)Console.ReadLine()).ToInt32(culture.NumberFormat);
 
             var world = new World(rows, columns);
-            world.Randomise();
+            world.Randomise(liveCells: liveCells);
             while (true)
             {
                 Console.Clear();
@@ -163,7 +166,7 @@ namespace GameOfLife
                     break;
                 Thread.Sleep(1000);
             }
-            Console.WriteLine("Simulation finished.");
+            Console.WriteLine("\nSimulation finished.");
             Console.ReadKey();
         }
     }
