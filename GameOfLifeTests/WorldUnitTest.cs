@@ -13,7 +13,7 @@ namespace GameOfLifeTests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            world = new World(2, 2);
+            world = new World(2, 2, 2);
             world.Initialise(new List<int[]>() {
                 new int[] {0, 0},
                 new int[] {1, 1}
@@ -51,7 +51,7 @@ namespace GameOfLifeTests
         [TestMethod]
         public void TestEvolve()
         {
-            var w = new World(4, 4);
+            var w = new World(4, 4, 2);
             var liveCells = new List<int[]> () {
                 new int[] {0, 1},
                 new int[] {1, 2},
