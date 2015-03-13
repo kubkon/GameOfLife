@@ -158,7 +158,9 @@ namespace GameOfLife
 
             var world = new World(rows, columns);
             world.Randomise(liveCells: liveCells);
-            while (true)
+            var maxIterations = 100;
+
+            for (int i = 0; i < maxIterations; i++)
             {
                 Console.Clear();
                 Console.Write(world);
