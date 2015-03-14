@@ -64,7 +64,7 @@ namespace GameOfLife
                     // Count live neighbours of the current cell
                     var liveNeighbours = CountLiveNeighbours(i, j);
                     // Apply rules
-                    var result = ApplyRules(i, j, currentCell, liveNeighbours);
+                    var result = ApplyRules(currentCell, liveNeighbours);
                     // Save result
                     if (result == CellState.Live)
                         survived.Add(new int[] { i, j });
@@ -104,7 +104,7 @@ namespace GameOfLife
             return neighbours.Sum();
         }
 
-        public CellState ApplyRules(int x, int y, CellState currentCell, int liveNeighbours)
+        public CellState ApplyRules(CellState currentCell, int liveNeighbours)
         {
             var result = CellState.Dead;
             if ((currentCell == CellState.Live && liveNeighbours == 2) || liveNeighbours == 3)
