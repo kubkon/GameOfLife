@@ -14,7 +14,7 @@ namespace GameOfLife
         public readonly int columns;
         public readonly int initLiveCells;
         public readonly int[,] grid;
-        public int maxIterations = 100;
+        public int maxIterations = 200;
 
         List<int[]> survived;
 
@@ -180,7 +180,7 @@ namespace GameOfLife
                     Console.Write(world);
                     if (world.Evolve())
                         break;
-                    Thread.Sleep(1000);
+                    Thread.Sleep(250);
                 }
                 Console.WriteLine("\nSimulation finished.");
             }
