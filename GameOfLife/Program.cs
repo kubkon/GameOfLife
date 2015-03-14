@@ -55,7 +55,7 @@ namespace GameOfLife
 
         public bool Evolve()
         {
-            List<int[]> survived = new List<int[]>();
+            var survived = new List<int[]>();
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
@@ -84,9 +84,24 @@ namespace GameOfLife
             return finished;
         }
 
-        protected internal int CountLiveNeighbours(int x, int y)
+        public override string ToString()
         {
-            List<int> neighbours = new List<int>();
+            var sb = new StringBuilder();
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    var el = grid[i, j] == CellState.Live ? "x" : ".";
+                    sb.Append(el);
+                }
+                sb.Append("\n");
+            }
+            return sb.ToString();
+        }
+
+        internal int CountLiveNeighbours(int x, int y)
+        {
+            var neighbours = new List<int>();
             for (int i = -1; i < 2; i++)
             {
                 var k = x + i;
@@ -104,7 +119,7 @@ namespace GameOfLife
             return neighbours.Sum();
         }
 
-        protected internal CellState ApplyRules(CellState currentCell, int liveNeighbours)
+        internal CellState ApplyRules(CellState currentCell, int liveNeighbours)
         {
             var result = CellState.Dead;
             if ((currentCell == CellState.Live && liveNeighbours == 2) || liveNeighbours == 3)
@@ -112,21 +127,6 @@ namespace GameOfLife
                 result = CellState.Live;
             }
             return result;
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    var el = grid[i, j] == CellState.Live ? "x" : ".";
-                    sb.Append(el);
-                }
-                sb.Append("\n");
-            }
-            return sb.ToString();
         }
 
         void ClearGrid()
