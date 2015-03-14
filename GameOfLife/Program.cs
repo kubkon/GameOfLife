@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace GameOfLife
 {
+    public enum CellState { Dead = 0, Live = 1 }
+
     public class World
     {
         public readonly int rows;
         public readonly int columns;
         public readonly int initLiveCells;
-        public readonly int[,] grid;
+        public readonly CellState[,] grid;
         public int maxIterations = 200;
 
         List<int[]> survived;
@@ -23,11 +25,12 @@ namespace GameOfLife
             this.rows = rows;
             this.columns = columns;
             this.initLiveCells = initLiveCells;
-            grid = new int[rows, columns];
+            grid = new CellState[rows, columns];
         }
 
         public void Initialise(List<int[]> liveCells)
         {
+            // FIX:ME check if indices do not exceed the grid dimensions
             UpdateGrid(liveCells);
         }
 
@@ -63,7 +66,7 @@ namespace GameOfLife
                     // Apply rules
                     var result = ApplyRules(i, j, currentCell, liveNeighbours);
                     // Save result
-                    if (result == 1)
+                    if (result == CellState.Live)
                         survived.Add(new int[] { i, j });
                 }
             }
@@ -94,19 +97,19 @@ namespace GameOfLife
 
                     if (k >= 0 && k < rows && l >= 0 && l < columns && (k != x || l != y))
                     {
-                        neighbours.Add(grid[k, l]);
+                        neighbours.Add((int)grid[k, l]);
                     }
                 }
             }
             return neighbours.Sum();
         }
 
-        public int ApplyRules(int x, int y, int currentCell, int liveNeighbours)
+        public CellState ApplyRules(int x, int y, CellState currentCell, int liveNeighbours)
         {
-            var result = 0;
-            if ((currentCell > 0 && liveNeighbours == 2) || liveNeighbours == 3)
+            var result = CellState.Dead;
+            if ((currentCell == CellState.Live && liveNeighbours == 2) || liveNeighbours == 3)
             {
-                result = 1;
+                result = CellState.Live;
             }
             return result;
         }
@@ -118,7 +121,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    var el = grid[i, j] == 1 ? "x" : ".";
+                    var el = grid[i, j] == CellState.Live ? "x" : ".";
                     sb.Append(el);
                 }
                 sb.Append("\n");
@@ -133,10 +136,9 @@ namespace GameOfLife
 
         void UpdateGrid(List<int[]> liveCells)
         {
-            // FIX:ME check if indices do not exceed the grid dimensions
             foreach (int[] indices in liveCells)
             {
-                grid[indices[0], indices[1]] = 1;
+                grid[indices[0], indices[1]] = CellState.Live;
             }
         }
 
