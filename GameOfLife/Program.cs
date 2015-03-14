@@ -84,7 +84,7 @@ namespace GameOfLife
             return finished;
         }
 
-        public int CountLiveNeighbours(int x, int y)
+        protected internal int CountLiveNeighbours(int x, int y)
         {
             List<int> neighbours = new List<int>();
             for (int i = -1; i < 2; i++)
@@ -104,7 +104,7 @@ namespace GameOfLife
             return neighbours.Sum();
         }
 
-        public CellState ApplyRules(CellState currentCell, int liveNeighbours)
+        protected internal CellState ApplyRules(CellState currentCell, int liveNeighbours)
         {
             var result = CellState.Dead;
             if ((currentCell == CellState.Live && liveNeighbours == 2) || liveNeighbours == 3)
